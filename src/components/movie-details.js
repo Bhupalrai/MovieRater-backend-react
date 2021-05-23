@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { useCookies } from 'react-cookie'; // hooks
 
 function MovieDetails(props){
 
     const [hilighted, setHilighted] = useState(-1);
+    const [token] = useCookies(['mr-token']);
 
-    // we need to notify parent about state change
+    // notify parent about state change
     const mov = props.movie;
 
     const hilightedRate = high => evt => {
@@ -18,7 +20,7 @@ function MovieDetails(props){
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Token 1691dff0c5090e081e592edd98cdf4856e33c1b9'
+              'Authorization': `Token ${token['mr-token']}`
             },
             body: JSON.stringify( {stars: rate + 1} )
           })
@@ -32,7 +34,7 @@ function MovieDetails(props){
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Token 1691dff0c5090e081e592edd98cdf4856e33c1b9'
+              'Authorization': `Token ${token['mr-token']}`
             }
           })
           .then( resp => resp.json())
@@ -44,7 +46,7 @@ function MovieDetails(props){
         <React.Fragment>
             { mov ? (
                 <div>
-                    <h1>{props.movie.title}</h1>
+                    <h2>{props.movie.title}</h2>
                     <p>{props.movie.description}</p>
                         <FontAwesomeIcon icon={faStar} className={props.movie.avg_rating > 0 ? 'orange':''} />
                         <FontAwesomeIcon icon={faStar} className={props.movie.avg_rating > 1 ? 'orange':''} />

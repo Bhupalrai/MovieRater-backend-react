@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { API } from '../api-service';
+import { useCookies } from 'react-cookie'; // hooks
+
 
 function MovieForm(props) {
 
     const [ title, setTitle ] = useState('');
     const [ description, setDescription] = useState('');
+    const [token] = useCookies(['mr-token']);
 
     // use hooks
     useEffect ( () => {
@@ -13,13 +16,13 @@ function MovieForm(props) {
     }, [props.movie])
 
     const updateClicked = () => {
-        API.updateMovie(props.movie.id, {title, description})
+        API.updateMovie(props.movie.id, {title, description}, token['mr-token'])
         .then( resp => props.updateMovie(resp))
         .catch( error => console.log(error))
     }
 
     const createClicked = () => {
-        API.createMovie({title, description})
+        API.createMovie({title, description}, token['mr-token'])
         .then( resp => props.movieCreated(resp))
         .catch( error => console.log(error))
     }
@@ -36,7 +39,7 @@ function MovieForm(props) {
                     <br></br><br></br>
                     <label htmlFor="description">Description</label>
                     <br></br>
-                    <textarea id="description" type="text" placeholder="description" value={description}
+                    <textarea id="description" type="text" className="textarea" placeholder="description" value={description}
                         onChange={ evt => setDescription(evt.target.value)}
                     >
                     </textarea>

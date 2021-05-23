@@ -15,6 +15,40 @@
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
 }
+.login-container{
+  width: 50%;
+  margin: 5% 5%;
+}
+
+input {
+  width: 70%;
+  padding: 5px;
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+textarea{
+  width: 85%;
+  padding: 10px;
+  margin: 8px 0;
+  font-size: 0.6rem;
+}
+
+button {
+  background-color: #1f3d5f;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #2a435f;
+}
 
 .orange{
   color:orange;
@@ -42,4 +76,18 @@
 .movie-item svg {
   font-size: 1.2rem;
   margin: 16px 7px;
+}
+
+
+h1 {
+  color: orange;
+}
+
+
+.fa-sign-out-alt{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 1.5rem;
 }

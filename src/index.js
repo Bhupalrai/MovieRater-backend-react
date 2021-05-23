@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Route, BrowserRouter } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
 import Auth from './components/auth';
 
 
@@ -15,12 +16,12 @@ function Router () {
 
   return (
     <React.StrictMode>
-      <TokenContext.Provider value={ {token, setToken} }>
+      <CookiesProvider value={ {token, setToken} }>
         <BrowserRouter>
           <Route exact path="/" component={Auth} />
           <Route exact path="/movies" component={App} />
         </BrowserRouter>
-      </TokenContext.Provider>
+      </CookiesProvider>
     </React.StrictMode>
   )
 }

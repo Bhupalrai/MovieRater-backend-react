@@ -1,45 +1,72 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { API } from '../api-service'; 
-import { TokenContext } from '../index';
+import { useCookies } from 'react-cookie'; // hooks
+
+// bootstrap
+// import only required component if possible
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function Auth(){
 
-    const [username, setUsername ] = useState('');
-    const [password, setPassword ] = useState('');
+    const [isLoginView, setIsLoginView] = useState(true);
 
     // set token to context so that we can use these
     // variables through out the the page we need
-    const {token, setToken }  = useContext(TokenContext);
+    const [token, setToken ]  = useCookies(['mr-token']);
+
+    const [username, setUsername ] = useState('');
+    const [password, setPassword ] = useState('');
     
     // log the changed token and redirec to next page
     useEffect( () =>{
         console.log(token);
-        if(token) window.location.href = '/movies';
-    }, [token])
+
+        // if token in present then login
+        if(token['mr-token']) window.location.href = '/movies';
+    }, [token]);
 
     const loginClicked = () => {
         API.loginUser({username, password})
-        .then(resp => setToken(resp.token))
+        .then(resp => setToken('mr-token', resp.token))
+        .catch(error => console.log(error))
+    }
+
+    const registerClicked = () => {
+        API.registerUser({username, password})
+        .then(() => loginClicked())
         .catch(error => console.log(error))
     }
 
     return (
-        <div>
-            <label htmlFor="username">Username</label><br></br>
-            <input id="username" type="text" placeholder="username" value={username}
-                onChange={ evt => setUsername(evt.target.value)}
-            />            
-            <br></br>
-            
-            <label htmlFor="password">Password</label><br></br>
-            <input id="password" type="password" placeholder="password" value={password}
-                onChange={ evt => setPassword(evt.target.value)}
-            />
-            <br></br>
+        <div className="App">
+            < div className="login-container">
 
-            <button onClick={loginClicked}>Login</button>
+                {isLoginView ? <h1>Login</h1> : <h1>Register</h1> }
 
+                <label htmlFor="username">Username</label><br></br>
+                <input id="username" type="text" placeholder="username" value={username}
+                    onChange={ evt => setUsername(evt.target.value)}
+                />            
+                <br></br>
+                
+                <label htmlFor="password">Password</label><br></br>
+                <input id="password" type="password" placeholder="password" value={password}
+                    onChange={ evt => setPassword(evt.target.value)}
+                />
+                <br></br>
+                <br></br>
+
+                {isLoginView ?
+                    <button onClick={loginClicked}>Login</button> : 
+                    <button onClick={registerClicked}>Register</button>
+                }
+                
+                {isLoginView ?
+                    <p onClick={() => setIsLoginView(false)}>Don't have an Account? Register here!</p> :
+                    <p onClick={() => setIsLoginView(true)}>Have an Account? Login here </p>                 
+                }
+            </div>
         </div>
     )
 }

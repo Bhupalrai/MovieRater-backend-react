@@ -3,9 +3,16 @@ import React, { useState, useEffect } from 'react';
 import MovieList from './components/movie-list';
 import MovieDetails from './components/movie-details';
 import MovieForm from './components/movie-form';
+import { useCookies } from 'react-cookie'; // hooks
+import { useFetch } from './components/hooks/useFetch';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 
 function App() {
+
+  const [token, setToken, deleteToken] = useCookies(['mr-token']);
 
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -20,14 +27,20 @@ function App() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Token 1691dff0c5090e081e592edd98cdf4856e33c1b9'
+        'Authorization': `Token ${token['mr-token']}`
       }
     })
     .then( resp => resp.json())
     .then( resp => setMovies(resp))
     .catch( error => console.log(error))
-  }, [])
+  }, []);
 
+  useEffect( () => {
+    console.log(token);
+
+    // if token in present then login
+    if(!token['mr-token']) window.location.href = '/';
+  }, [token]);
   
   const loadMovie = movie => {
     setSelectedMovie(movie);
@@ -65,10 +78,15 @@ function App() {
     setMovies(newMovies);
   }
 
+  const logOutUser = () => {
+    deleteToken(['mr-token']);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>Movie Rater</h1>
+        <FontAwesomeIcon icon={faSignOutAlt} onClick={logOutUser} />
         </header>
         <div className="layout">
 
